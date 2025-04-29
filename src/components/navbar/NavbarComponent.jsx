@@ -8,6 +8,7 @@ const NavbarComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activePath, setActivePath] = useState("/");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Actualiza la ruta activa cuando cambie la ubicación
   useEffect(() => {
@@ -31,20 +32,73 @@ const NavbarComponent = () => {
   };
 
   return (
-    <nav className="w-full shadow p-4 flex justify-between bg-black text-white">
-      <img src={ParrotLogo} alt="Parrot Logo" className="h-10  self-center" />
-      <div className="">
-        {navItems.map((item, index) => (
-          <ButtonComponent
-            key={index}
-            size="md"
-            style={activePath === item.path ? item.style : "secondary"}
-            className={index > 0 ? "ml-2" : ""}
-            onClick={() => handleNavigation(item.path)}
+    <nav className="w-full shadow p-4 bg-black text-white">
+      <div className="flex flex-col md:flex-row md:justify-between">
+        {/* Logo y botón de menú */}
+        <div className="flex justify-between items-center">
+          <img
+            src={ParrotLogo}
+            alt="Parrot Logo"
+            className="h-10 self-center"
+          />
+
+          {/* Botón de menú para móvil */}
+          <button
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            {item.label}
-          </ButtonComponent>
-        ))}
+            {menuOpen ? (
+              // Icono X cuando el menú está abierto
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            ) : (
+              // Icono de hamburguesa cuando está cerrado
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                ></path>
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Menú de navegación */}
+        <div
+          className={`${
+            menuOpen ? "flex" : "hidden"
+          } flex-col space-y-2 mt-4 md:mt-0 md:flex md:flex-row md:space-y-0 md:space-x-2`}
+        >
+          {navItems.map((item, index) => (
+            <ButtonComponent
+              key={index}
+              size="md"
+              style={activePath === item.path ? item.style : "secondary"}
+              className="w-full md:w-auto"
+              onClick={() => handleNavigation(item.path)}
+            >
+              {item.label}
+            </ButtonComponent>
+          ))}
+        </div>
       </div>
     </nav>
   );
